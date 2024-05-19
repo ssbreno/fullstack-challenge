@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  api:
+    container_name: tech-api
+    build:
+      context: ./apps/back-end
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./apps/back-end:/app
+    command: sh -c "yarn run start"
+    depends_on:
+      - mongo
+    ports:
+      - 3000:3000
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/tech
+
+  mongo:
+    image: mongo:latest
+    container_name: tech-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+    driver: local
