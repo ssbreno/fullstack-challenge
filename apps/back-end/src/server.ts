@@ -1,12 +1,12 @@
-import 'reflect-metadata'
+import cors from '@fastify/cors';
+import * as dotenv from 'dotenv';
 import fastify from 'fastify';
-import fastifyExpress from 'fastify-express';
 import mongoose from 'mongoose';
+import 'reflect-metadata';
+import { EmployeeController } from './application/employee/controllers/employee.controller';
+import { HealthCheckController } from './application/health-check/controllers/health-check.controller';
 import { logger } from './shared/loggers/logger';
 import { initializeControllers } from './shared/utils/controller-init';
-import * as dotenv from 'dotenv'
-import { HealthCheckController } from './application/health-check/controllers/health-check.controller';
-import { EmployeeController } from './application/employee/controllers/employee.controller';
 
 
 dotenv.config()
@@ -16,7 +16,7 @@ const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/tech';
 
 
 const startServer = async () => {
-  await server.register(fastifyExpress)
+  await server.register(cors)
 
   const controllers = [
     HealthCheckController,
@@ -26,7 +26,7 @@ const startServer = async () => {
   initializeControllers(server, controllers)
 
   try {
-    await server.listen({ port: 3000 })
+    await server.listen({ port: 3001 })
     mongoose.connect(mongoUri)
     .then(() => {
         console.log('MongoDB connected');
